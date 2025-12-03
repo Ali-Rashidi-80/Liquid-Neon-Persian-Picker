@@ -24,18 +24,23 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
   const [activeShortcut, setActiveShortcut] = useState<ShortcutType | null>(null);
   const [viewMode, setViewMode] = useState<ViewMode>('calendar');
   const [isMobile, setIsMobile] = useState(false);
+  
+  // Smart Trigger Hover State
+  const [isTriggerHovered, setIsTriggerHovered] = useState(false);
+  
+  // 1 = Slide Left (Next), -1 = Slide Right (Prev)
+  const [direction, setDirection] = useState(0);
 
-  // Sync internal state when opening modal
+  // Sync state when opening
   useEffect(() => {
     if (isOpen) {
       setTempStartDate(startDate);
       setTempEndDate(endDate);
-      // If we have a range, set current view to start date
       if (startDate) setCurrentDate(startDate);
     }
   }, [isOpen, startDate, endDate]);
 
-  // Responsive Check
+  // Mobile detection
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
@@ -43,34 +48,60 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // 5-Second Auto-Close Inactivity Timer
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    if (isOpen) {
+      const resetTimer = () => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          setIsOpen(false);
+        }, 5000);
+      };
+
+      // Listen for any interaction to reset the timer
+      window.addEventListener('pointermove', resetTimer);
+      window.addEventListener('mousedown', resetTimer);
+      window.addEventListener('keydown', resetTimer);
+      window.addEventListener('touchstart', resetTimer);
+
+      // Start the timer immediately
+      resetTimer();
+
+      return () => {
+        clearTimeout(timer);
+        window.removeEventListener('pointermove', resetTimer);
+        window.removeEventListener('mousedown', resetTimer);
+        window.removeEventListener('keydown', resetTimer);
+        window.removeEventListener('touchstart', resetTimer);
+      };
+    }
+  }, [isOpen]);
+
   const handleDateClick = (day: Date) => {
     setActiveShortcut(null);
 
-    // Scenario 1: No start date selected yet
     if (!tempStartDate) {
       setTempStartDate(day);
       setTempEndDate(null);
       return;
     }
 
-    // Scenario 2: Start date selected, no end date
     if (tempStartDate && !tempEndDate) {
       if (Jalali.isBefore(day, tempStartDate)) {
-        setTempStartDate(day); // Reset start if clicked before
+        setTempStartDate(day);
       } else {
-        setTempEndDate(day); // Complete the range
+        setTempEndDate(day);
       }
       return;
     }
 
-    // Scenario 3: Full range selected - Smart Adjustment
     if (tempStartDate && tempEndDate) {
       if (Jalali.isBefore(day, tempStartDate)) {
-        // Clicked before current start -> New Range Start
         setTempStartDate(day);
         setTempEndDate(null);
       } else {
-        // Clicked after current start -> Adjust End Date (Keep Start)
         setTempEndDate(day);
       }
     }
@@ -82,8 +113,8 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
     }
   };
 
+  // Resets the committed state (for the Trigger X button)
   const handleReset = () => {
-    // Reset committed state immediately
     setStartDate(null);
     setEndDate(null);
     setTempStartDate(null);
@@ -92,8 +123,14 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
     if (onChange) onChange({ startDate: null, endDate: null });
   };
 
+  // Clears the temporary selection inside the modal
+  const handleClear = () => {
+    setTempStartDate(null);
+    setTempEndDate(null);
+    setActiveShortcut(null);
+  };
+
   const handleShortcut = (type: ShortcutType) => {
-    // Toggle logic
     if (activeShortcut === type) {
       setActiveShortcut(null);
       setTempStartDate(null);
@@ -123,11 +160,17 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
         const lastMonth = Jalali.subMonths(today, 1);
         newStart = Jalali.startOfMonth(lastMonth);
         newEnd = Jalali.endOfMonth(lastMonth);
-        setCurrentDate(lastMonth);
         break;
     }
+    
     setTempStartDate(newStart);
     setTempEndDate(newEnd);
+    
+    // Always navigate calendar to the start of the selection
+    if (newStart) {
+      setCurrentDate(newStart);
+    }
+    
     setViewMode('calendar'); 
   };
 
@@ -145,6 +188,7 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
   };
 
   const handleMonthChange = (amount: number) => {
+    setDirection(amount);
     setCurrentDate(prev => Jalali.addMonths(prev, amount));
   };
 
@@ -159,11 +203,12 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
 
   const viewProps = {
     currentDate,
-    startDate: tempStartDate, // Pass temporary state to views
+    startDate: tempStartDate,
     endDate: tempEndDate,
     hoverDate,
     activeShortcut,
     viewMode,
+    direction,
     onDateClick: handleDateClick,
     onDateHover: handleDateHover,
     onShortcut: handleShortcut,
@@ -173,41 +218,103 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
     onSelectMonth: handleSelectMonth,
     onConfirm: handleConfirm,
     onCancel: handleCancel,
+    onReset: handleClear,
   };
 
-  const getTriggerText = () => {
-    if (startDate && endDate) {
-      return `${Jalali.formatDate(startDate)} - ${Jalali.formatDate(endDate)}`;
-    }
-    if (startDate) return Jalali.formatDate(startDate);
-    return "انتخاب بازه زمانی...";
-  };
-
+  // Trigger Content Logic
+  const hasDate = !!startDate;
+  // Expand if hovered OR if a date is selected (persistent expansion)
+  const shouldExpand = isTriggerHovered || hasDate;
+  
+  // Check if it's a single day selection (start == end)
+  const isSingleDay = startDate && endDate && Jalali.isSameDay(startDate, endDate);
+  
   return (
     <>
-      <button 
+      <motion.button 
+        layout
+        initial={{ width: "4.5rem", borderRadius: "1rem" }} 
+        animate={{ 
+          width: shouldExpand ? "auto" : "4.5rem",
+          borderRadius: "1rem",
+          boxShadow: isTriggerHovered || hasDate ? "0 0 25px rgba(0,240,255,0.2)" : "0 0 15px rgba(0,0,0,0.3)",
+          borderColor: hasDate ? "rgba(0, 240, 255, 0.5)" : "rgba(255, 255, 255, 0.1)"
+        }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        onHoverStart={() => setIsTriggerHovered(true)}
+        onHoverEnd={() => setIsTriggerHovered(false)}
         onClick={() => setIsOpen(true)}
         className={`${styles.triggerButton} ${className}`}
+        style={{ minWidth: "4.5rem" }}
       >
-        <CalendarIcon className={`${styles.triggerIcon} w-5 h-5`} />
-        <span className={styles.triggerText}>
-          {getTriggerText()}
-        </span>
+        <div className="flex items-center justify-center h-full px-0">
+            {/* Right Side: Day + Month (Always Visible Icon-like) */}
+            <div className="w-[4.5rem] h-16 flex flex-col items-center justify-center flex-shrink-0 relative z-10">
+                {hasDate ? (
+                    <>
+                        <span className="text-neon font-bold text-3xl leading-none font-mono tracking-tighter drop-shadow-[0_0_5px_rgba(0,240,255,0.8)] mb-0.5">
+                            {Jalali.formatDate(startDate!, 'd')}
+                        </span>
+                        <span className="text-white/80 text-[10px] font-bold leading-none">
+                            {Jalali.formatDate(startDate!, 'MMMM')}
+                        </span>
+                    </>
+                ) : (
+                    <CalendarIcon className="w-7 h-7 text-neon drop-shadow-[0_0_5px_rgba(0,240,255,0.8)]" />
+                )}
+            </div>
+
+            {/* Left Side: Expanded Info */}
+            <motion.div 
+                className={styles.triggerContent}
+                initial={{ opacity: 0, width: 0 }}
+                animate={{ 
+                    opacity: shouldExpand ? 1 : 0,
+                    width: shouldExpand ? "auto" : 0,
+                    paddingRight: shouldExpand ? (hasDate ? "0.75rem" : "0.5rem") : 0,
+                    paddingLeft: shouldExpand ? (hasDate ? "1rem" : "0.5rem") : 0,
+                }}
+                transition={{ duration: 0.2 }}
+            >
+                {/* Vertical Divider */}
+                {shouldExpand && hasDate && (
+                    <div className="w-px h-8 bg-white/10 absolute right-0 top-1/2 -translate-y-1/2" />
+                )}
+
+                {hasDate ? (
+                    <div className="flex flex-col justify-center min-w-[100px] text-right h-full leading-tight">
+                         {isSingleDay ? (
+                            // Single Day: Just the full date, centered
+                            <span className="text-white font-bold text-xs whitespace-nowrap">
+                                {Jalali.formatDate(startDate!, 'd MMMM yyyy')}
+                            </span>
+                         ) : (
+                            // Range: Stacked
+                            <>
+                                {/* Top: Start Date */}
+                                <span className="text-white font-bold text-xs whitespace-nowrap">
+                                     {Jalali.formatDate(startDate!, 'd MMMM yyyy')}
+                                </span>
+                                {/* Bottom: End Date */}
+                                {endDate && (
+                                    <span className="text-neon text-[10px] font-medium whitespace-nowrap opacity-90 mt-0.5">
+                                        تا {Jalali.formatDate(endDate, 'd MMMM')}
+                                    </span>
+                                )}
+                            </>
+                         )}
+                    </div>
+                ) : (
+                    <span className="text-white font-bold text-sm whitespace-nowrap px-2">
+                        انتخاب بازه زمانی
+                    </span>
+                )}
+            </motion.div>
+        </div>
         
-        {startDate && (
-          <div 
-            role="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleReset();
-            }}
-            className={styles.triggerReset}
-            title="پاک کردن"
-          >
-            <X size={16} />
-          </div>
-        )}
-      </button>
+        {/* Internal Glow Effect */}
+        <div className="absolute inset-0 bg-neon/5 blur-xl rounded-full animate-pulse pointer-events-none" />
+      </motion.button>
 
       <AnimatePresence>
         {isOpen && (

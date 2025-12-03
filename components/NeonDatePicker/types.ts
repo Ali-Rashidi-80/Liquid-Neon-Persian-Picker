@@ -28,6 +28,7 @@ export interface ViewProps {
   hoverDate: Date | null;
   activeShortcut: ShortcutType | null;
   viewMode: ViewMode;
+  direction: number; // 1 for next, -1 for prev
   onDateClick: (day: Date) => void;
   onDateHover: (day: Date) => void;
   onShortcut: (type: ShortcutType) => void;
@@ -37,4 +38,5 @@ export interface ViewProps {
   onSelectMonth: (monthIndex: number) => void;
   onConfirm: () => void;
   onCancel: () => void;
+  onReset: () => void;
 }

@@ -118,7 +118,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
       </div>
 
       {/* Grid Content */}
-      <div className="flex-1 w-full max-w-[340px] md:max-w-lg landscape:max-w-2xl mx-auto p-2 h-full">
+      <div className="flex-1 w-full max-w-[340px] md:max-w-full landscape:max-w-2xl mx-auto p-2 h-full flex flex-col justify-center">
         <AnimatePresence mode="wait">
           {mode === 'month' ? (
             <motion.div 
@@ -127,7 +127,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.2 }}
-              className="grid grid-cols-3 landscape:grid-cols-4 gap-4 md:gap-6 landscape:gap-x-6 landscape:gap-y-3 place-content-center h-full"
+              className="grid grid-cols-3 md:grid-cols-4 landscape:grid-cols-4 gap-4 md:gap-6 landscape:gap-x-6 landscape:gap-y-3 w-full"
             >
               {Jalali.PERSIAN_MONTHS.map((month, index) => {
                 const isActive = index === currentMonthIndex;
@@ -139,7 +139,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
                     onClick={() => onSelectMonth(index)}
                     className={`
                       ${styles.monthButton} 
-                      py-3 text-sm md:text-base
+                      py-3 text-sm md:text-lg md:py-6 md:h-auto
                       landscape:py-2 landscape:text-xs landscape:h-10
                       ${isActive ? styles.monthButtonActive : 'text-slate-300'}
                     `}
@@ -159,7 +159,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.2 }}
-              className="grid grid-cols-3 landscape:grid-cols-4 gap-4 md:gap-6 landscape:gap-x-6 landscape:gap-y-3 place-content-center h-full"
+              className="grid grid-cols-3 md:grid-cols-4 landscape:grid-cols-4 gap-4 md:gap-6 landscape:gap-x-6 landscape:gap-y-3 w-full"
             >
               {years.map((year) => {
                 const isActive = year === currentYear;
@@ -171,7 +171,7 @@ const MonthYearSelector: React.FC<MonthYearSelectorProps> = ({
                     onClick={() => handleYearClick(year)}
                     className={`
                       ${styles.monthButton} 
-                      py-3 text-sm md:text-base font-mono
+                      py-3 text-sm md:text-lg md:py-6 md:h-auto font-mono
                       landscape:py-2 landscape:text-xs landscape:h-10
                       ${isActive ? styles.monthButtonActive : 'text-slate-300'}
                     `}
