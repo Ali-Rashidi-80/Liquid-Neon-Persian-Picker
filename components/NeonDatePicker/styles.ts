@@ -3,7 +3,7 @@ import { Variants } from 'framer-motion';
 
 export const styles = {
   // Modal & Trigger
-  overlay: "fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md transition-all",
+  overlay: "fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md transition-all pointer-events-auto",
   
   // Smart Trigger Button
   triggerButton: "group flex items-center bg-glass-bg border border-white/10 h-16 rounded-2xl hover:border-neon hover:bg-slate-800/80 transition-all duration-300 cursor-pointer shadow-[0_0_15px_rgba(0,0,0,0.3)] relative overflow-hidden backdrop-blur-xl z-50",

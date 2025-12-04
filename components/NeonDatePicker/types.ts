@@ -17,6 +17,7 @@ export type ViewMode = 'calendar' | 'month-year';
 
 export interface NeonDatePickerProps {
   onChange?: DateSelectionHandler;
+  onReset?: () => void;
   className?: string;
   defaultOpen?: boolean;
 }

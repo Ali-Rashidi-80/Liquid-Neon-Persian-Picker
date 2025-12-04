@@ -126,6 +126,7 @@ export default BookingPage;
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
 | `onChange` | `(range: DateRange) => void` | `-` | Callback fired when the user clicks "Confirm". Returns `{ startDate, endDate }`. |
+| `onReset` | `() => void` | `-` | Callback fired when the user clicks "Reset". Useful for clearing external state. |
 | `defaultOpen` | `boolean` | `false` | Whether the picker modal is open initially. |
 | `className` | `string` | `""` | Additional CSS classes for the trigger button wrapper. |
 
@@ -149,7 +150,7 @@ export default BookingPage;
 *   **انیمیشن‌های فیزیکال**: تمام ترنزیشن‌ها (باز شدن، تغییر ماه، هاور) با فیزیک فنری (Spring Physics) پیاده‌سازی شده‌اند.
 
 ### ۲. تجربه کاربری هوشمند (Smart UX)
-*   **تریگر هوشمند**: دکمه بازکردن تقویم در حالت عادی یک آیکون/عدد ساده است، اما با هاور شدن باز می‌شود و جزئیات دقیق تاریخ (از/تا) را نشان می‌دهد.
+*   **تریگر هوشمند**: دکمه بازکردن تقویم در حالت عادی یک آیکون/عدد ساده است، اما با هاور شدن یا انتخاب تاریخ، باز می‌شود و جزئیات دقیق تاریخ (از/تا) را نشان می‌دهد.
 *   **تایمر غیرفعالی**: اگر کاربر ۵ ثانیه با تقویم کار نکند، مودال خودکار بسته می‌شود.
 *   **نمایش تک‌روزه**: اگر تاریخ شروع و پایان یکی باشد (مثلاً «امروز»)، نمایشگر هوشمندانه به حالت تک‌خطی تغییر می‌کند.
 

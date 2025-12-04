@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Calendar as CalendarIcon, X } from 'lucide-react';
 import DesktopView from './DesktopView';
@@ -8,9 +9,10 @@ import * as Jalali from './utils';
 import { NeonDatePickerProps, ShortcutType, ViewMode } from './types';
 import { styles, animations } from './styles';
 
-const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '', defaultOpen = false }) => {
+const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, onReset, className = '', defaultOpen = false }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [mounted, setMounted] = useState(false);
   
   // Committed State (Trigger)
   const [startDate, setStartDate] = useState<Date | null>(null);
@@ -40,8 +42,8 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
     }
   }, [isOpen, startDate, endDate]);
 
-  // Mobile detection
   useEffect(() => {
+    setMounted(true);
     const checkMobile = () => setIsMobile(window.innerWidth < 1024);
     checkMobile();
     window.addEventListener('resize', checkMobile);
@@ -113,7 +115,7 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
     }
   };
 
-  // Resets the committed state (for the Trigger X button)
+  // Resets the committed state (for the Trigger X button or external reset)
   const handleReset = () => {
     setStartDate(null);
     setEndDate(null);
@@ -121,6 +123,7 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
     setTempEndDate(null);
     setActiveShortcut(null);
     if (onChange) onChange({ startDate: null, endDate: null });
+    if (onReset) onReset();
   };
 
   // Clears the temporary selection inside the modal
@@ -232,6 +235,7 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
   return (
     <>
       <motion.button 
+        type="button"
         layout
         initial={{ width: "4.5rem", borderRadius: "1rem" }} 
         animate={{ 
@@ -243,7 +247,7 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
         transition={{ type: "spring", stiffness: 300, damping: 25 }}
         onHoverStart={() => setIsTriggerHovered(true)}
         onHoverEnd={() => setIsTriggerHovered(false)}
-        onClick={() => setIsOpen(true)}
+        onClick={(e) => { e.stopPropagation(); setIsOpen(true); }}
         className={`${styles.triggerButton} ${className}`}
         style={{ minWidth: "4.5rem" }}
       >
@@ -316,33 +320,38 @@ const NeonDatePicker: React.FC<NeonDatePickerProps> = ({ onChange, className = '
         <div className="absolute inset-0 bg-neon/5 blur-xl rounded-full animate-pulse pointer-events-none" />
       </motion.button>
 
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            className={styles.overlay}
-            variants={animations.overlay}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            onClick={() => setIsOpen(false)}
-          >
-            <div className="absolute top-4 left-4 z-50 md:hidden">
-                <button 
-                  onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
-                  className="p-2 rounded-full bg-slate-800/50 text-white border border-white/10 hover:bg-neon/20 transition-colors"
-                >
-                   <X className="w-6 h-6" />
-                </button>
-            </div>
+      {/* Persistent Portal Pattern */}
+      {mounted && createPortal(
+        <AnimatePresence>
+          {isOpen && (
+            <motion.div
+              className={styles.overlay}
+              variants={animations.overlay}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              onClick={() => setIsOpen(false)}
+              style={{ zIndex: 9999 }}
+            >
+              <div className="absolute top-4 left-4 z-50 md:hidden">
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); setIsOpen(false); }}
+                    className="p-2 rounded-full bg-slate-800/50 text-white border border-white/10 hover:bg-neon/20 transition-colors"
+                  >
+                     <X className="w-6 h-6" />
+                  </button>
+              </div>
 
-            {isMobile ? (
-              <MobileView {...viewProps} />
-            ) : (
-              <DesktopView {...viewProps} />
-            )}
-          </motion.div>
-        )}
-      </AnimatePresence>
+              {isMobile ? (
+                <MobileView {...viewProps} />
+              ) : (
+                <DesktopView {...viewProps} />
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>,
+        document.body
+      )}
     </>
   );
 };
