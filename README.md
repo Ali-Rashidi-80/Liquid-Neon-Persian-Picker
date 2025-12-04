@@ -1,21 +1,23 @@
-
 <div align="center">
 
 # 💎 Liquid Neon Persian Picker
-
 ### The Ultimate High-End Jalali Date Range Picker for React
 
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![React](https://img.shields.io/badge/React-18%2B-61DAFB.svg)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-3178C6.svg)](https://www.typescriptlang.org/)
-[![Framer Motion](https://img.shields.io/badge/Framer_Motion-Powered-purple.svg)](https://www.framer.com/motion/)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+[![React](https://img.shields.io/badge/React-18%2B-61DAFB.svg?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0%2B-3178C6.svg?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.0%2B-38B2AC.svg?style=flat-square&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Framer Motion](https://img.shields.io/badge/Motion-Powered-purple.svg?style=flat-square&logo=framer&logoColor=white)](https://www.framer.com/motion/)
 
 <br />
 
-**Liquid Neon** is not just a date picker; it's a **UI experience**.  
-Built with a focus on **Glassmorphism**, **Cyberpunk Aesthetics**, and **Fluid Physics**, it provides a fully responsive Persian (Jalali) date range selection interface that feels alive.
+<p align="center">
+  <b>Liquid Neon</b> is not just a date picker; it's a <b>UI experience</b>.<br/>
+  Built with a focus on <b>Glassmorphism</b>, <b>Cyberpunk Aesthetics</b>, and <b>Fluid Physics</b>.<br/>
+  It provides a fully responsive Persian (Jalali) date range selection interface that feels alive.
+</p>
 
-[Features](#-features) • [Installation](#-installation) • [Quick Start](#-quick-start) • [فارسی](#-مستندات-فارسی)
+[Features](#-features) • [Installation](#-installation) • [Usage](#-usage) • [API](#-api-reference) • [Theming](#-styling--theming) • [فارسی](#-مستندات-فارسی)
 
 </div>
 
@@ -23,129 +25,112 @@ Built with a focus on **Glassmorphism**, **Cyberpunk Aesthetics**, and **Fluid P
 
 ## ✨ Features
 
-### 🎨 Visual Engineering
-- **Cinema-Grade Glassmorphism**: Multi-layer backdrop blurs, noise textures, and specular reflections
-- **Neon Aesthetics**: Dynamic glow effects that react to user interaction
-- **Fluid Animations**: Powered by `framer-motion` for spring-physics transitions
+### 🎨 Visual Engineering & Aesthetics
+- **Cinema-Grade Glassmorphism**: Utilizes multi-layer backdrop blurs, noise textures, and specular reflections to create a realistic frosted glass effect.
+- **Neon Glow System**: Interactive elements cast dynamic light that reacts to user interaction, creating a sense of depth and energy.
+- **Fluid Physics Animations**: Powered by `framer-motion`, every transition (opening, hovering, selecting) uses spring physics for a natural, non-linear feel.
+
+### 🧠 Intelligent UX
+- **Smart Trigger**: A compact button that intelligently expands to show detailed date information only when needed.
+- **Auto-Close Timer**: Detects inactivity and automatically closes the modal after 5 seconds to keep the interface clean.
+- **Context-Aware Layouts**: Automatically switches between Desktop (Sidebar), Tablet (Grid), and Mobile (Bottom Sheet) views.
+- **Smart Inputs**: Handles single-day selection logic (hides range if start == end) and formats dates intuitively.
 
 ### 📅 Core Functionality
-- **Full Jalali Support**: Built on `date-fns-jalali` for precise Persian calendar calculations
-- **Range Selection**: Intuitive start and end date picking with visual highlighting
-- **Shortcuts Sidebar**: Quick access to "Today", "Yesterday", "This Week", and "Last Month"
-- **Month/Year Navigator**: Dedicated grid view for jumping between months and years
-
-### 📱 Adaptive Responsiveness
-- **Desktop**: Dual-calendar view with sidebar
-- **Tablet (Portrait)**: Optimized single view with 4-column grids
-- **Mobile (Landscape)**: Specialized split-view layout
-- **Mobile (Portrait)**: Bottom-sheet style modal
+- **Full Jalali Support**: Built on `date-fns-jalali` for precise Persian calendar calculations.
+- **Range Selection**: Intuitive start and end date picking with visual highlighting of the range.
+- **Quick Shortcuts**: Sidebar access to "Today", "Yesterday", "This Week", and "Last Month".
+- **Month/Year Navigator**: A dedicated grid view for jumping between months and years quickly.
 
 ---
 
 ## 📦 Installation
 
-### Step 1: Copy the Component
+Since this is a high-end UI component, it is designed to be integrated directly into your project source.
 
-Copy the entire `components/NeonDatePicker` folder and `styles/neon-datepicker.css` into your project:
-
-```
-your-project/
-├── src/
-│   ├── components/
-│   │   └── NeonDatePicker/          <- Copy this folder
-│   │       ├── index.ts
-│   │       ├── NeonDatePicker.tsx
-│   │       ├── DesktopView.tsx
-│   │       ├── MobileView.tsx
-│   │       ├── LiquidButton.tsx
-│   │       ├── MonthYearSelector.tsx
-│   │       ├── styles.ts
-│   │       ├── types.ts
-│   │       └── utils.ts
-│   └── styles/
-│       └── neon-datepicker.css      <- Copy this file
-```
-
-### Step 2: Install Dependencies
+### Step 1: Dependencies
+Install the required peer dependencies:
 
 ```bash
-npm install date-fns-jalali framer-motion lucide-react
+npm install date-fns-jalali framer-motion lucide-react clsx tailwind-merge
 # or
-yarn add date-fns-jalali framer-motion lucide-react
+yarn add date-fns-jalali framer-motion lucide-react clsx tailwind-merge
 ```
 
-### Step 3: Import the CSS
+### Step 2: Add the Component
+Copy the `NeonDatePicker` folder and the `styles/neon-datepicker.css` file into your project structure:
 
-Add the CSS import to your main CSS file or App component:
-
-```css
-/* In your main CSS file (e.g., index.css or App.css) */
-@import './styles/neon-datepicker.css';
+```
+src/
+├── components/
+│   └── NeonDatePicker/   <-- The Component Folder
+└── styles/
+    └── neon-datepicker.css   <-- The Styles File
 ```
 
-Or in your React component:
+### Step 3: Import Styles
+Import the CSS file in your root `index.tsx`, `App.tsx`, or `layout.tsx`:
 
 ```tsx
 import './styles/neon-datepicker.css';
 ```
 
-### Step 4: Add Vazirmatn Font (Recommended)
-
-For best Persian text rendering, add Vazirmatn font:
+### Step 4: Font Setup (Recommended)
+For the best visual experience, use the **Vazirmatn** font. Add it to your HTML or CSS:
 
 ```html
-<!-- In your index.html -->
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@100;300;400;500;700;900&display=swap" rel="stylesheet">
 ```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Usage
+
+### Basic Example
 
 ```tsx
 import React, { useState } from 'react';
 import NeonDatePicker from './components/NeonDatePicker';
 import { DateRange } from './components/NeonDatePicker/types';
-import './styles/neon-datepicker.css';
 
-function App() {
-  const [dateRange, setDateRange] = useState<DateRange>({
-    startDate: null,
-    endDate: null
-  });
+const App = () => {
+  const [range, setRange] = useState<DateRange>({ startDate: null, endDate: null });
 
   return (
     <div className="bg-slate-900 min-h-screen p-10" dir="rtl">
       <NeonDatePicker 
-        onChange={setDateRange}
-        onReset={() => setDateRange({ startDate: null, endDate: null })}
+        onChange={setRange}
+        onReset={() => setRange({ startDate: null, endDate: null })}
       />
-      
-      {dateRange.startDate && (
-        <div className="mt-4 text-white">
-          <p>شروع: {dateRange.startDate.toLocaleDateString('fa-IR')}</p>
-          <p>پایان: {dateRange.endDate?.toLocaleDateString('fa-IR')}</p>
-        </div>
-      )}
     </div>
   );
-}
+};
+```
 
-export default App;
+### Advanced Configuration
+
+```tsx
+<NeonDatePicker 
+  onChange={handleDateChange}
+  defaultOpen={true}
+  className="z-50 my-custom-class"
+/>
 ```
 
 ---
 
-## ⚙️ Props API
+## 📚 API Reference
+
+### `NeonDatePicker` Props
 
 | Prop | Type | Default | Description |
 | :--- | :--- | :--- | :--- |
-| `onChange` | `(range: DateRange) => void` | `-` | Callback when user clicks "Confirm". Returns `{ startDate, endDate }` |
-| `onReset` | `() => void` | `-` | Callback when user clicks "Reset" |
-| `defaultOpen` | `boolean` | `false` | Whether picker modal is initially open |
-| `className` | `string` | `""` | Additional CSS classes for the trigger button wrapper |
+| `onChange` | `(range: DateRange) => void` | `undefined` | **Required**. Callback fired when the user confirms the selection. |
+| `onReset` | `() => void` | `undefined` | Callback fired when the "Clear" (پاک کردن) button is clicked. |
+| `defaultOpen` | `boolean` | `false` | Sets the initial open state of the picker modal. |
+| `className` | `string` | `""` | Additional CSS classes to apply to the trigger wrapper. |
 
-### DateRange Type
+### `DateRange` Type
 
 ```typescript
 interface DateRange {
@@ -156,124 +141,143 @@ interface DateRange {
 
 ---
 
-## 🎨 Customization
+## 🎨 Styling & Theming
+
+Liquid Neon uses **CSS Variables** and specific **Tailwind classes** defined in `neon-datepicker.css`. You can easily customize the look.
 
 ### Changing the Neon Color
-
-Edit `styles/neon-datepicker.css` and search for `#00F0FF` to replace with your preferred color:
+To change the primary neon color (Default: Cyan `#00F0FF`), override the CSS classes or edit `neon-datepicker.css`:
 
 ```css
-/* Example: Change to purple neon */
-.text-neon {
-    color: #A855F7 !important;
-}
-.bg-neon {  
-    background-color: #A855F7 !important;
-}
-/* ... update all other neon color references */
+/* Example: Change to Purple Neon */
+.text-neon { color: #d946ef !important; }
+.bg-neon { background-color: #d946ef !important; }
+.border-neon { border-color: #d946ef !important; }
+.shadow-neon { box-shadow: 0 0 10px rgba(217, 70, 239, 0.5) !important; }
 ```
 
----
-
-## 📁 File Structure
-
-```
-NeonDatePicker/
-├── index.ts              # Main export
-├── NeonDatePicker.tsx    # Core component with state management
-├── DesktopView.tsx       # Desktop dual-calendar layout
-├── MobileView.tsx        # Mobile bottom-sheet layout
-├── LiquidButton.tsx      # Animated button component
-├── MonthYearSelector.tsx # Month/Year picker overlay
-├── styles.ts             # Tailwind class definitions & animations
-├── types.ts              # TypeScript interfaces
-└── utils.ts              # Jalali calendar utilities
-
-styles/
-└── neon-datepicker.css   # Required CSS utilities
-```
+### Dark Mode Only
+This component is designed specifically for **Dark Mode** interfaces. It relies on dark backgrounds (`slate-900`, `black`) to make the glass and neon effects pop.
 
 ---
 
 <br />
+<br />
+
 <div dir="rtl" align="right">
 
 # 💎 مستندات فارسی
-
 ### انتخابگر تاریخ نئون مایع (Liquid Neon)
+#### پیشرفته‌ترین دیت‌پیکر جلالی (شمسی) برای ری‌اکت
 
-این کتابخانه یک کامپوننت انتخاب بازه زمانی فوق پیشرفته برای تقویم جلالی است.
+<br />
 
----
+**لیکوئید نئون (Liquid Neon)** فراتر از یک ابزار انتخاب تاریخ است؛ این یک **تجربه کاربری** است.
+طراحی شده با الهام از سبک‌های **سایبرپانک** و **گلس‌مورفیسم**، این کامپوننت با استفاده از فیزیک سیال، رابط کاربری‌ای را ارائه می‌دهد که زنده و پویا به نظر می‌رسد.
 
-## ✨ ویژگی‌های برجسته
-
-### ۱. مهندسی بصری
-*   **افکت‌های شیشه‌ای سینمایی**: استفاده از لایه‌های بلور چندگانه
-*   **نئون داینامیک**: افکت‌های نوری که به حرکت موس واکنش نشان می‌دهند
-*   **انیمیشن‌های فیزیکال**: تمام ترنزیشن‌ها با فیزیک فنری پیاده‌سازی شده‌اند
-
-### ۲. تجربه کاربری هوشمند
-*   **تریگر هوشمند**: دکمه هوشمندی که با هاور جزئیات نشان می‌دهد
-*   **تایمر غیرفعالی**: بسته شدن خودکار بعد از ۵ ثانیه بدون فعالیت
-*   **میانبرهای سریع**: امروز، دیروز، هفته جاری، ماه قبل
+[ویژگی‌ها](#-ویژگی‌ها) • [نصب](#-نصب-و-راه‌اندازی) • [استفاده](#-نحوه-استفاده) • [شخصی‌سازی](#-شخصی‌سازی)
 
 ---
 
-## 🚀 راهنمای نصب سریع
+## ✨ ویژگی‌ها
 
-### ۱. کپی کردن فایل‌ها
-پوشه `components/NeonDatePicker` و فایل `styles/neon-datepicker.css` را به پروژه خود کپی کنید.
+### 🎨 مهندسی بصری و زیبایی‌شناسی
+- **گلس‌مورفیسم سینمایی**: استفاده از چندین لایه بلور (Blur)، بافت نویز (Noise Texture) و بازتاب‌های نور برای ایجاد حس واقعی شیشه مات.
+- **سیستم نوری نئون**: المان‌های تعاملی دارای درخشش نئونی هستند که به حرکت ماوس و کلیک کاربر واکنش نشان می‌دهند.
+- **انیمیشن‌های فیزیکال**: تمام حرکات (باز شدن، هاور، انتخاب) با استفاده از `framer-motion` و فیزیک فنری (Spring Physics) پیاده‌سازی شده‌اند تا حسی طبیعی داشته باشند.
 
-### ۲. نصب وابستگی‌ها
+### 🧠 تجربه کاربری هوشمند (Smart UX)
+- **تریگر هوشمند**: دکمه باز کردن تقویم در حالت عادی کوچک است و تنها زمانی که نیاز باشد، اطلاعات کامل تاریخ را نمایش می‌دهد.
+- **تایمر عدم فعالیت**: اگر کاربر ۵ ثانیه با تقویم تعامل نکند، مودال به صورت خودکار بسته می‌شود تا صفحه شلوغ نشود.
+- **طراحی واکنش‌گرا (Responsive)**: تغییر خودکار چیدمان بین دسکتاپ (سایدبار)، تبلت (گرید) و موبایل (Bottom Sheet).
+
+### 📅 عملکرد هسته
+- **پشتیبانی کامل جلالی**: محاسبات دقیق تقویم شمسی با استفاده از `date-fns-jalali`.
+- **انتخاب بازه زمانی**: انتخاب آسان تاریخ شروع و پایان با هایلایت بصری مسیر.
+- **میانبرهای سریع**: دسترسی سریع به "امروز"، "دیروز"، "هفته جاری" و "ماه قبل".
+- **ناوبری ماه/سال**: نمای اختصاصی برای پرش سریع بین ماه‌ها و سال‌ها.
+
+---
+
+## 📦 نصب و راه‌اندازی
+
+از آنجایی که این یک کامپوننت UI سطح بالا (High-End) است، پیشنهاد می‌شود فایل‌های آن را مستقیماً در پروژه خود کپی کنید.
+
+### مرحله ۱: نصب وابستگی‌ها
 
 ```bash
-npm install date-fns-jalali framer-motion lucide-react
+npm install date-fns-jalali framer-motion lucide-react clsx tailwind-merge
 ```
 
-### ۳. ایمپورت CSS
+### مرحله ۲: افزودن کامپوننت
+پوشه `NeonDatePicker` و فایل `styles/neon-datepicker.css` را در ساختار پروژه خود کپی کنید.
 
-```css
-@import './styles/neon-datepicker.css';
-```
-
-### ۴. استفاده
+### مرحله ۳: ایمپورت استایل‌ها
+فایل CSS را در فایل اصلی پروژه (`App.tsx` یا `index.tsx`) ایمپورت کنید:
 
 ```tsx
-import NeonDatePicker from './components/NeonDatePicker';
+import './styles/neon-datepicker.css';
+```
 
-function App() {
+### مرحله ۴: تنظیم فونت (پیشنهادی)
+برای بهترین نمایش متون فارسی، از فونت **وزیرمتن (Vazirmatn)** استفاده کنید.
+
+---
+
+## 🚀 نحوه استفاده
+
+### مثال ساده
+
+```tsx
+import React, { useState } from 'react';
+import NeonDatePicker from './components/NeonDatePicker';
+import { DateRange } from './components/NeonDatePicker/types';
+
+const App = () => {
+  const [range, setRange] = useState<DateRange>({ startDate: null, endDate: null });
+
   return (
-    <div dir="rtl">
+    <div className="bg-slate-900 min-h-screen p-10" dir="rtl">
       <NeonDatePicker 
-        onChange={(range) => console.log('بازه انتخاب شده:', range)} 
+        onChange={setRange}
+        onReset={() => setRange({ startDate: null, endDate: null })}
       />
     </div>
   );
-}
+};
 ```
 
 ---
 
-## 📋 نیازمندی‌ها
+## 📚 راهنمای API
 
-| پکیج | نسخه |
-| :--- | :--- |
-| React | 18+ |
-| date-fns-jalali | ^4.1.0 |
-| framer-motion | ^12.0.0 |
-| lucide-react | ^0.400.0 |
+### پراپ‌های `NeonDatePicker`
 
----
-
-## 🤝 مشارکت
-
-از مشارکت شما استقبال می‌کنیم! لطفاً با ایجاد Issue یا Pull Request در گیت‌هاب مشارکت کنید.
+| پراپ | نوع | پیش‌فرض | توضیحات |
+| :--- | :--- | :--- | :--- |
+| `onChange` | `(range: DateRange) => void` | `undefined` | **الزامی**. تابعی که پس از تایید انتخاب کاربر اجرا می‌شود. |
+| `onReset` | `() => void` | `undefined` | زمانی که دکمه "پاک کردن" کلیک شود اجرا می‌شود. |
+| `defaultOpen` | `boolean` | `false` | وضعیت اولیه باز بودن مودال تقویم. |
+| `className` | `string` | `""` | کلاس‌های CSS اضافی برای دکمه تریگر. |
 
 ---
 
-## 📄 مجوز
+## 🎨 شخصی‌سازی
 
-این پروژه تحت مجوز MIT منتشر شده است.
+لیکوئید نئون از **CSS Variables** و کلاس‌های اختصاصی **Tailwind** که در فایل `neon-datepicker.css` تعریف شده‌اند استفاده می‌کند.
 
+### تغییر رنگ نئون
+برای تغییر رنگ اصلی (پیش‌فرض: فیروزه‌ای `#00F0FF`)، کافیست مقادیر رنگ را در فایل CSS تغییر دهید یا کلاس‌ها را Override کنید.
+
+### حالت تاریک (Dark Mode)
+این کامپوننت به طور اختصاصی برای رابط‌های کاربری **تاریک (Dark Mode)** طراحی شده است و روی پس‌زمینه‌های تیره (`slate-900` یا `black`) بهترین جلوه را دارد.
+
+</div>
+
+---
+
+<div align="center">
+  <br />
+  <p>Made with ❤️ for the Persian React Community</p>
+  <p>طراحی شده با عشق برای جامعه ری‌اکت ایران</p>
 </div>
